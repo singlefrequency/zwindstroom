@@ -154,8 +154,7 @@ int fTT_dfunc(double a, const double y[], double f[], void *params_ptr) {
     const double lambda = Omega_lambda / (Omega_m * (1 - 2 * b));
 
     /* Final answer, dH/da */
-    f[0] = (3 * y[0] * (-(a * (a * a * a * p_r0 + rhom0)) - rhor0 - pow6b * lambda * (a * a * a * a * p_r0 + a * (rhom0 - 2 * b * rhom0) + rhor0) * Hpowb)) /
-           (2. * a * a * (3 * y[0] * y[0] * a * a * a + pow6b * b * (-1 + 2 * b) * lambda * rhom0 * Hpowb));
+    f[0] =  -0.5*(3*pr*H(t) + 3*rhor*H(t) + 2**b*3**(1 + b)*pr*λ*H(t)*(-(H(t)**2/T0))**b + - 2**b*3**(1 + b)*λ*rhor*H(t)*(-(H(t)**2/T0))**b + 3*H(t)*ρm(t) + - 2**b*3**(1 + b)*λ*H(t)*(-(H(t)**2/T0))**b*ρm(t) + - 2**(2 + b)*3**b*b*λ*(-(H(t)**2/T0))**b*Derivative(1)(ρm)(t))/ - (a*(3*H(t)**2 - 2**(1 + b)*3**b*b*λ*(-(H(t)**2/T0))**b*ρm(t) + - 2**(2 + b)*3**b*b**2*λ*(-(H(t)**2/T0))**b*ρm(t)));
 
     return GSL_SUCCESS;
 }
