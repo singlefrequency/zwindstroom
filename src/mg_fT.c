@@ -144,17 +144,31 @@ int fTT_dfunc(double a, const double y[], double f[], void *params_ptr) {
     /* Intermediate steps */
     const double T0 = -6.0 * H_0_2;
 
+    /* Density and pressure from photons and ultra-relativistic particles */
+    const double rho_r_nu = rho_r + rho_nu
+    const double p_r_nu = p_r + p_nu
+    const double rho_r = 3.0 * H_0_2 * (Omega_CMB + Omega_ur) * inv_a4;
+    const double p_r = rho_r / 3.0;
+    /* Density and pressure from CDM and baryons (no neutrinos here) */
+    const double rho_m = 3.0 * H_0_2 * (Omega_c + Omega_b) * inv_a2 * inv_a;
+    const double p_m = 0.;
+
     /* Intermediate steps */
-    const double rhor0 = 3.0 * H_0_2 * Omega_r;
-    const double rhom0 = 3.0 * H_0_2 * Omega_m;
-    const double p_r0 = rhor0 / 3.0;
-    const double Hpowb = pow((-(y[0] * y[0] / T0)), b);
+    const double expr_powb = pow((-(y[0] * y[0] / T0)), b);
     const double pow3b = b * b * b;
+    const double powb3 = pow(3, b);
+    const double powb2 = pow(2, 2+b);
+    const double pow3b2 = pow(2, pow3b_b);
+    const double pow3b_b = pow(pow3b, (1 + b));
     const double pow6b = pow3b * pow3b;
     const double lambda = Omega_lambda / (Omega_m * (1 - 2 * b));
+    const double rho_m_dot = -3*y[0]*(rho_m+p_m);
 
     /* Final answer, dH/da */
-    f[0] =  -0.5*(3*pr*H(t) + 3*rhor*H(t) + 2**b*3**(1 + b)*pr*λ*H(t)*(-(H(t)**2/T0))**b + - 2**b*3**(1 + b)*λ*rhor*H(t)*(-(H(t)**2/T0))**b + 3*H(t)*ρm(t) + - 2**b*3**(1 + b)*λ*H(t)*(-(H(t)**2/T0))**b*ρm(t) + - 2**(2 + b)*3**b*b*λ*(-(H(t)**2/T0))**b*Derivative(1)(ρm)(t))/ - (a*(3*H(t)**2 - 2**(1 + b)*3**b*b*λ*(-(H(t)**2/T0))**b*ρm(t) + - 2**(2 + b)*3**b*b**2*λ*(-(H(t)**2/T0))**b*ρm(t)));
+    f[0] =  -0.5*(3*p_r_nu*y[0] + 3*rho_r_nu*y[0] + pow3b2*p_r_nu*lambda*y[0]*expr_powb \
+    + pow3b2*lambda*rho_r_nu*y[0]*expr_powb + 3*y[0]*rho_m + pow3b2*lambda*y[0]*expr_powb*rho_m \
+    + powb2*powb3*b*lambda*expr_powb*rho_m_dot)/(a*(3*y[0] * y[0] - pow(2, (1 + b))*powb3*b*lambda*expr_powb*rho_m \
+    + powb2*powb3*b*b*lambda*expr_powb*rho_m));
 
     return GSL_SUCCESS;
 }
